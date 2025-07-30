@@ -1,16 +1,23 @@
 window.addEventListener('DOMContentLoaded', () => {
-  fetch('https://type.fit/api/quotes')
-    .then(response => response.json())
+  const url = encodeURIComponent('https://zenquotes.io/api/random');
+  fetch(`https://api.allorigins.win/get?url=${url}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
-      const randomQuote = data[Math.floor(Math.random() * data.length)];
-      const quote = `"${randomQuote.text}" — ${randomQuote.author || "Unknown"}`;
-      document.getElementById('quote').textContent = quote;
+      const parsed = JSON.parse(data.contents); // Get actual JSON from wrapped response
+      const quote = parsed[0];
+      document.getElementById('quote').textContent = `"${quote.q}" — ${quote.a}`;
     })
     .catch(err => {
       console.error('Quote fetch error:', err);
       document.getElementById('quote').textContent = "Couldn't load quote. Try again later.";
     });
 });
+
 
 
 
